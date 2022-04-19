@@ -24,11 +24,15 @@ async function removeNote(id) {
   console.log(chalk.cyanBright(`Note with ${id} was deleted.`));
 }
 
-async function updateNote(id, newValue) {
+async function updateNote(newNote) {
+  const { id, title } = newNote;
   const notes = await getNotes();
-  const updatedNotes = notes.map((note) => (note.id === id.toString() ? { id: note.id, title: newValue } : { id: note.id, title: note.title }));
-  await fs.writeFile(notesPath, JSON.stringify(updatedNotes));
-  console.log(chalk.cyanBright(`Note with ${id} was updated.`));
+  const noteToUpdateIndex = notes.findIndex((n) => n.id === id);
+  if (noteToUpdateIndex >= 0) {
+    notes[noteToUpdateIndex] = { ...notes[noteToUpdateIndex], title };
+    await fs.writeFile(notesPath, JSON.stringify(notes));
+    console.log(chalk.cyanBright(`Note with ID ${id} was updated.`));
+  }
 }
 async function getNotes() {
   const notes = await fs.readFile(notesPath, { encoding: "utf-8" });

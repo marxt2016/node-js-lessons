@@ -10,7 +10,7 @@ document.addEventListener("click", (event) => {
     const promptResult = prompt("Add new title", event.target.closest("li").firstElementChild.textContent);
     if (promptResult) {
       const id = event.target.dataset.id;
-      update(id, promptResult).then(() => {
+      update({ id, title: promptResult }).then(() => {
         event.target.closest("li").firstElementChild.textContent = promptResult;
       });
     }
@@ -21,12 +21,12 @@ async function remove(id) {
   await fetch(`/${id}`, { method: "DELETE" });
 }
 
-async function update(id, newValue) {
-  await fetch(`/${id}`, {
+async function update(newNote) {
+  await fetch(`/${newNote.id}`, {
     method: "PATCH",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify({ title: newValue }),
+    body: JSON.stringify(newNote),
   });
 }

@@ -43,7 +43,7 @@ app.delete("/:id", async (req, res) => {
 });
 
 app.patch("/:id", async (req, res) => {
-  await updateNote(req.params.id, req.body.title);
+  await updateNote({ id: req.params.id, title: req.body.title });
   res.render("index", {
     title: "Express Example Post",
     notes: await getNotes(),
